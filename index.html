@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ACC Fuar">
+<meta name="theme-color" content="#05101b">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>ACC Fuar</title>
+<style>
+@font-face { font-family: 'Exo'; font-weight: 300 900; font-display: swap; src: url(assets/fonts/exo-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Exo'; font-weight: 300 900; font-display: swap; src: url(assets/fonts/exo-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root {
+  --navy: #0b1f33; --ink: #05101b; --blue: #225aa7; --green: #01a65c; --green-2: #19c37a;
+  --st: env(safe-area-inset-top, 0px); --sb: env(safe-area-inset-bottom, 0px);
+  --sl: env(safe-area-inset-left, 0px); --sr: env(safe-area-inset-right, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--ink); color: #fff; overflow: hidden; overscroll-behavior: none; }
+body { font-family: 'Exo', -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+img { -webkit-user-drag: none; }
+.ico { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+.view { position: fixed; inset: 0; opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility 0s linear .35s, transform .35s ease; transform: scale(1.015); }
+.view.active { opacity: 1; visibility: visible; transform: none; transition: opacity .35s ease, visibility 0s, transform .35s ease; }
+@media (prefers-reduced-motion: reduce) { .view { transition: none !important; transform: none !important; } }
+
+/* ---------- home ---------- */
+#home { display: flex; background: #000; }
+.half { position: relative; flex: 1; overflow: hidden; text-align: left; display: flex; align-items: flex-end; }
+.half .bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+.half:active .bg { transform: scale(1.04); }
+.half .shade { position: absolute; inset: 0; }
+.half.c .bg { background-image: url(assets/img/home-clarivent.jpg); background-position: 45% center; }
+.half.c .shade { background: linear-gradient(180deg, rgba(3,10,18,.15) 0%, rgba(3,10,18,.35) 45%, rgba(3,10,18,.92) 100%); }
+.half.d .bg { background-image: url(assets/img/home-davlumbaz.jpg); background-position: 40% center; }
+.half.d .shade { background: linear-gradient(180deg, rgba(3,10,18,.25) 0%, rgba(3,10,18,.45) 45%, rgba(3,10,18,.94) 100%); }
+.divider { position: relative; width: 6px; flex: none; background: linear-gradient(180deg, var(--blue), var(--green)); z-index: 2; }
+.half .content { position: relative; padding: 0 calc(48px + var(--sr)) calc(56px + var(--sb)) calc(48px + var(--sl)); width: 100%; }
+.half.d .content { padding-left: 48px; }
+.kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--green-2); }
+.kicker::before { content: ""; width: 30px; height: 3px; border-radius: 2px; background: currentColor; }
+.half h2 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 800; line-height: 1; margin: 14px 0 12px; letter-spacing: -.01em; }
+.half p { font-size: 17px; line-height: 1.5; color: rgba(255,255,255,.8); font-weight: 500; max-width: 440px; }
+.half .row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 26px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; font-size: 14px; font-weight: 700;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.chip .ico { width: 17px; height: 17px; color: var(--green-2); }
+.go { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--green); box-shadow: 0 10px 30px rgba(1,166,92,.45); }
+.go .ico { width: 28px; height: 28px; stroke-width: 2.6; }
+.topbar { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; justify-content: center; align-items: center;
+  padding: calc(18px + var(--st)) 24px 18px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(3,10,18,.75), rgba(3,10,18,0)); }
+.topbar img { height: 40px; width: auto; }
+.status { position: absolute; right: calc(20px + var(--sr)); top: calc(20px + var(--st)); display: flex; align-items: center; gap: 8px; pointer-events: auto;
+  padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; background: rgba(5,16,27,.7); border: 1px solid rgba(255,255,255,.16);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.status .dot { width: 9px; height: 9px; border-radius: 50%; background: #f2b233; }
+.status.ok .dot { background: var(--green-2); box-shadow: 0 0 0 4px rgba(25,195,122,.2); }
+.status.err .dot { background: #e5533d; }
+.status .bar { width: 90px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.15); overflow: hidden; }
+.status .bar i { display: block; height: 100%; width: 0; background: var(--green-2); transition: width .3s; }
+.status.ok .bar { display: none; }
+@media (orientation: portrait) {
+  #home { flex-direction: column; }
+  .divider { width: auto; height: 6px; background: linear-gradient(90deg, var(--blue), var(--green)); }
+  .half .content, .half.d .content { padding: 0 40px 40px; }
+  .half.c .content { padding-bottom: 36px; }
+  .half.c .bg { background-image: url(assets/img/hero-clarivent.jpg); background-position: 70% center; }
+  .half.d .bg { background-image: url(assets/img/hero-davlumbaz.jpg); }
+}
+
+/* ---------- section ---------- */
+#section { background: var(--ink); }
+#section .bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+#section .shade { position: absolute; inset: 0; background: linear-gradient(100deg, rgba(3,10,18,.96) 0%, rgba(3,10,18,.85) 40%, rgba(3,10,18,.35) 75%, rgba(3,10,18,.2) 100%); }
+.back { position: absolute; left: calc(20px + var(--sl)); top: calc(20px + var(--st)); z-index: 5; display: flex; align-items: center; gap: 8px;
+  height: 52px; padding: 0 20px 0 14px; border-radius: 16px; font-size: 16px; font-weight: 700;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.back:active, .opt:active, .go:active, .icon-btn:active { transform: scale(.96); }
+#section .logo { position: absolute; right: calc(28px + var(--sr)); top: calc(26px + var(--st)); height: 38px; width: auto; z-index: 5; }
+#section .content { position: absolute; left: calc(64px + var(--sl)); right: calc(64px + var(--sr)); top: 50%; transform: translateY(-46%); max-width: 760px; }
+#section h1 { font-size: clamp(44px, 6vw, 76px); font-weight: 800; line-height: 1; margin: 16px 0 16px; letter-spacing: -.01em; }
+#section .desc { font-size: 19px; line-height: 1.55; color: rgba(255,255,255,.8); font-weight: 500; max-width: 560px; }
+.opts { display: flex; gap: 18px; margin-top: 40px; flex-wrap: wrap; }
+.opt { position: relative; width: 300px; min-height: 196px; padding: 24px; border-radius: 24px; text-align: left; display: flex; flex-direction: column;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  transition: transform .15s ease; }
+.opt .oi { width: 60px; height: 60px; border-radius: 18px; display: grid; place-items: center; background: linear-gradient(135deg, var(--blue), var(--green)); }
+.opt .oi .ico { width: 30px; height: 30px; }
+.opt b { display: block; margin-top: auto; padding-top: 22px; font-size: 26px; font-weight: 800; }
+.opt span { display: block; margin-top: 4px; font-size: 15px; color: rgba(255,255,255,.7); font-weight: 600; }
+.opt .arr { position: absolute; right: 22px; top: 26px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.12); }
+.opt.video .oi { background: linear-gradient(135deg, #e5533d, #f2b233); }
+.opt.gallery .oi { background: linear-gradient(135deg, #7b5cff, #225aa7); }
+
+/* ---------- gallery ---------- */
+#gallery { background: var(--ink); }
+.gbar { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; align-items: center; gap: 18px;
+  padding: calc(20px + var(--st)) calc(28px + var(--sr)) 22px calc(20px + var(--sl));
+  background: linear-gradient(180deg, rgba(5,16,27,.98) 55%, rgba(5,16,27,0)); }
+#gallery .back { position: static; flex: none; }
+.gbar .tt { flex: 1; min-width: 0; }
+.gbar h1 { font-size: 26px; font-weight: 800; line-height: 1.1; }
+.gbar .n { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.6); margin-top: 2px; }
+.gbar .logo { height: 34px; width: auto; flex: none; }
+.gscroll { position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: calc(104px + var(--st)) calc(20px + var(--sr)) calc(28px + var(--sb)) calc(20px + var(--sl)); }
+.ggrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.ggrid button { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: #0d1a27; }
+.ggrid img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .3s, transform .2s; }
+.ggrid img.ld { opacity: 1; }
+.ggrid button:active img { transform: scale(.96); }
+@media (orientation: portrait) { .ggrid { grid-template-columns: repeat(3, 1fr); } }
+
+/* ---------- viewer ---------- */
+#viewer { background: #000; touch-action: none; }
+.track { position: absolute; inset: 0; display: flex; will-change: transform; }
+.track.anim { transition: transform .38s cubic-bezier(.2,.75,.2,1); }
+.pg { position: relative; flex: none; width: 100vw; height: 100%; overflow: hidden; }
+.pg img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; max-width: none; object-fit: contain; opacity: 0; transition: opacity .25s; }
+.pg img.ld { opacity: 1; }
+.pg img.za { transition: opacity .25s, left .28s cubic-bezier(.2,.75,.2,1), top .28s cubic-bezier(.2,.75,.2,1), width .28s cubic-bezier(.2,.75,.2,1), height .28s cubic-bezier(.2,.75,.2,1); }
+#viewer .vbar, #viewer .navbtn, #viewer .hint { transition: opacity .3s; }
+#viewer.ui-off .vbar, #viewer.ui-off .navbtn, #viewer.ui-off .hint { opacity: 0; pointer-events: none; }
+#viewer.zoomed .navbtn { opacity: 0; pointer-events: none; }
+.vbar { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px;
+  padding: calc(12px + var(--st)) calc(16px + var(--sr)) 12px calc(16px + var(--sl)); background: linear-gradient(180deg, rgba(0,0,0,.85), rgba(0,0,0,0)); }
+.vbar .t { flex: 1; font-size: 17px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.icon-btn { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.16); flex: none; }
+.icon-btn.on { background: var(--green); border-color: var(--green); }
+.counter { height: 52px; min-width: 84px; padding: 0 14px; border-radius: 16px; display: grid; place-items: center; font-weight: 700; font-size: 16px;
+  font-variant-numeric: tabular-nums; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.16); }
+.navbtn { position: absolute; top: 50%; z-index: 4; width: 56px; height: 56px; margin-top: -28px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.16); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: opacity .2s; }
+.navbtn.prev { left: calc(14px + var(--sl)); } .navbtn.next { right: calc(14px + var(--sr)); }
+.navbtn[disabled] { opacity: 0; pointer-events: none; }
+.hint { position: absolute; left: 50%; bottom: calc(22px + var(--sb)); transform: translateX(-50%); z-index: 4; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.55);
+  letter-spacing: .04em; white-space: nowrap; }
+.thumbs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding: 16px calc(16px + var(--sr)) calc(16px + var(--sb)) calc(16px + var(--sl)); background: rgba(5,16,27,.94);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transform: translateY(105%); transition: transform .3s ease; }
+.thumbs.open { transform: none; }
+.thumbs button { flex: none; position: relative; border-radius: 10px; overflow: hidden; border: 2px solid transparent; background: #111; }
+.thumbs button.on { border-color: var(--green-2); }
+.thumbs img { display: block; height: 110px; width: auto; }
+.thumbs button span { position: absolute; left: 6px; bottom: 6px; padding: 2px 7px; border-radius: 6px; font-size: 12px; font-weight: 700; background: rgba(0,0,0,.7); }
+
+/* ---------- player ---------- */
+#player { background: #000; }
+#player video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+#player .vbar { pointer-events: none; transition: opacity .3s; }
+#player .vbar > * { pointer-events: auto; }
+#player.playing .vbar.dim { opacity: 0; }
+#player .err { position: absolute; inset: 0; display: none; place-items: center; text-align: center; padding: 40px; font-size: 18px; color: rgba(255,255,255,.8); }
+#player.failed .err { display: grid; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-deck" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M7 8h6M7 12h10"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></symbol>
+    <symbol id="i-zoom" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+  </defs>
+</svg>
+
+<section id="home" class="view active" aria-label="Ana ekran">
+  <div class="topbar">
+    <img src="assets/img/acc-logo-white.svg" alt="ACC Exhaust Solutions">
+    <div class="status" id="status" role="status"><span class="dot"></span><span id="statusText">Hazırlanıyor…</span><span class="bar"><i id="statusBar"></i></span></div>
+  </div>
+  <button class="half c" data-open="clarivent" aria-label="CLARIVENT bölümünü aç">
+    <div class="bg"></div><div class="shade"></div>
+    <div class="content">
+      <div class="kicker">Endüstriyel hava filtrasyonu</div>
+      <h2>CLARIVENT</h2>
+      <p>Elektrostatik filtre, aktif karbon ve otomatik yıkama ile çok aşamalı filtrasyon sistemi.</p>
+      <div class="row">
+        <div class="chips"><span class="chip"><svg class="ico"><use href="#i-deck"/></svg>Sunum</span><span class="chip"><svg class="ico"><use href="#i-play"/></svg>Tanıtım Filmi</span></div>
+        <span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span>
+      </div>
+    </div>
+  </button>
+  <div class="divider"></div>
+  <button class="half d" data-open="davlumbaz" aria-label="Döküm Davlumbazı bölümünü aç">
+    <div class="bg"></div><div class="shade"></div>
+    <div class="content">
+      <div class="kicker">Basınçlı döküm (HPDC)</div>
+      <h2>DAVLUMBAZ</h2>
+      <p>Alüminyum döküm tezgahları için kaynağında emiş ve filtrasyon sağlayan davlumbaz sistemleri.</p>
+      <div class="row">
+        <div class="chips"><span class="chip"><svg class="ico"><use href="#i-deck"/></svg>Sunum</span><span class="chip"><svg class="ico"><use href="#i-image"/></svg>Foto Galeri</span></div>
+        <span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span>
+      </div>
+    </div>
+  </button>
+</section>
+
+<section id="section" class="view" aria-label="Bölüm">
+  <div class="bg" id="secBg"></div><div class="shade"></div>
+  <button class="back" data-home><svg class="ico"><use href="#i-left"/></svg>Ana ekran</button>
+  <img class="logo" src="assets/img/acc-logo-white.svg" alt="">
+  <div class="content">
+    <div class="kicker" id="secKicker"></div>
+    <h1 id="secTitle"></h1>
+    <p class="desc" id="secDesc"></p>
+    <div class="opts" id="secOpts"></div>
+  </div>
+</section>
+
+<section id="gallery" class="view" aria-label="Foto galeri">
+  <div class="gscroll" id="gscroll"><div class="ggrid" id="ggrid"></div></div>
+  <div class="gbar">
+    <button class="back" id="gBack"><svg class="ico"><use href="#i-left"/></svg>Geri</button>
+    <div class="tt"><h1 id="gTitle">Foto Galeri</h1><div class="n" id="gCount"></div></div>
+    <img class="logo" src="assets/img/acc-logo-white.svg" alt="">
+  </div>
+</section>
+
+<section id="viewer" class="view" aria-label="Sunum">
+  <div class="track" id="track"></div>
+  <div class="vbar">
+    <button class="icon-btn" id="vClose" aria-label="Kapat"><svg class="ico"><use href="#i-x"/></svg></button>
+    <div class="t" id="vTitle"></div>
+    <button class="icon-btn" id="vZoom" aria-label="Yakınlaştır"><svg class="ico"><use href="#i-zoom"/></svg></button>
+    <button class="icon-btn" id="vGrid" aria-label="Sayfalar"><svg class="ico"><use href="#i-grid"/></svg></button>
+    <div class="counter" id="vCount">1 / 1</div>
+  </div>
+  <button class="navbtn prev" id="vPrev" aria-label="Önceki sayfa"><svg class="ico"><use href="#i-left"/></svg></button>
+  <button class="navbtn next" id="vNext" aria-label="Sonraki sayfa"><svg class="ico"><use href="#i-right"/></svg></button>
+  <div class="hint" id="vHint">Kaydırarak sayfa değiştirin · İki parmakla yakınlaştırın</div>
+  <div class="thumbs" id="thumbs"></div>
+</section>
+
+<section id="player" class="view" aria-label="Video">
+  <video id="video" playsinline controls preload="auto"></video>
+  <div class="err">Video yüklenemedi. Uygulamayı internete bağlıyken bir kez açıp indirmenin tamamlanmasını bekleyin.</div>
+  <div class="vbar" id="pBar">
+    <button class="icon-btn" id="pClose" aria-label="Kapat"><svg class="ico"><use href="#i-x"/></svg></button>
+    <div class="t" id="pTitle"></div>
+  </div>
+</section>
+
+<script>
+var CACHE = 'acc-fuar-assets-fc20596709';
+var ASSETS = [{"url": "assets/clarivent/p01.jpg", "size": 289257}, {"url": "assets/clarivent/p02.jpg", "size": 780438}, {"url": "assets/clarivent/p03.jpg", "size": 544052}, {"url": "assets/clarivent/p04.jpg", "size": 714115}, {"url": "assets/clarivent/p05.jpg", "size": 504575}, {"url": "assets/clarivent/p06.jpg", "size": 493794}, {"url": "assets/clarivent/p07.jpg", "size": 508203}, {"url": "assets/clarivent/p08.jpg", "size": 456876}, {"url": "assets/clarivent/p09.jpg", "size": 537279}, {"url": "assets/clarivent/p10.jpg", "size": 372094}, {"url": "assets/clarivent/p11.jpg", "size": 354474}, {"url": "assets/clarivent/p12.jpg", "size": 631880}, {"url": "assets/clarivent/p13.jpg", "size": 273777}, {"url": "assets/clarivent/t01.jpg", "size": 4596}, {"url": "assets/clarivent/t02.jpg", "size": 7423}, {"url": "assets/clarivent/t03.jpg", "size": 5657}, {"url": "assets/clarivent/t04.jpg", "size": 7057}, {"url": "assets/clarivent/t05.jpg", "size": 5405}, {"url": "assets/clarivent/t06.jpg", "size": 4193}, {"url": "assets/clarivent/t07.jpg", "size": 5173}, {"url": "assets/clarivent/t08.jpg", "size": 5035}, {"url": "assets/clarivent/t09.jpg", "size": 5237}, {"url": "assets/clarivent/t10.jpg", "size": 4676}, {"url": "assets/clarivent/t11.jpg", "size": 4258}, {"url": "assets/clarivent/t12.jpg", "size": 5543}, {"url": "assets/clarivent/t13.jpg", "size": 3970}, {"url": "assets/davlumbaz/p01.jpg", "size": 783227}, {"url": "assets/davlumbaz/p02.jpg", "size": 646895}, {"url": "assets/davlumbaz/p03.jpg", "size": 463389}, {"url": "assets/davlumbaz/p04.jpg", "size": 633228}, {"url": "assets/davlumbaz/p05.jpg", "size": 408134}, {"url": "assets/davlumbaz/p06.jpg", "size": 375397}, {"url": "assets/davlumbaz/p07.jpg", "size": 424349}, {"url": "assets/davlumbaz/p08.jpg", "size": 299501}, {"url": "assets/davlumbaz/p09.jpg", "size": 340777}, {"url": "assets/davlumbaz/p10.jpg", "size": 1011944}, {"url": "assets/davlumbaz/p11.jpg", "size": 552861}, {"url": "assets/davlumbaz/p12.jpg", "size": 498632}, {"url": "assets/davlumbaz/p13.jpg", "size": 604770}, {"url": "assets/davlumbaz/t01.jpg", "size": 8424}, {"url": "assets/davlumbaz/t02.jpg", "size": 9091}, {"url": "assets/davlumbaz/t03.jpg", "size": 6533}, {"url": "assets/davlumbaz/t04.jpg", "size": 8702}, {"url": "assets/davlumbaz/t05.jpg", "size": 5988}, {"url": "assets/davlumbaz/t06.jpg", "size": 6378}, {"url": "assets/davlumbaz/t07.jpg", "size": 6549}, {"url": "assets/davlumbaz/t08.jpg", "size": 5700}, {"url": "assets/davlumbaz/t09.jpg", "size": 5302}, {"url": "assets/davlumbaz/t10.jpg", "size": 11889}, {"url": "assets/davlumbaz/t11.jpg", "size": 8145}, {"url": "assets/davlumbaz/t12.jpg", "size": 6217}, {"url": "assets/davlumbaz/t13.jpg", "size": 7839}, {"url": "assets/fonts/exo-latin-ext.woff2", "size": 19620}, {"url": "assets/fonts/exo-latin.woff2", "size": 21828}, {"url": "assets/galeri/p01.jpg", "size": 652542}, {"url": "assets/galeri/p02.jpg", "size": 837973}, {"url": "assets/galeri/p03.jpg", "size": 762337}, {"url": "assets/galeri/p04.jpg", "size": 772276}, {"url": "assets/galeri/p05.jpg", "size": 833367}, {"url": "assets/galeri/p06.jpg", "size": 762162}, {"url": "assets/galeri/p07.jpg", "size": 908902}, {"url": "assets/galeri/p08.jpg", "size": 497427}, {"url": "assets/galeri/p09.jpg", "size": 487930}, {"url": "assets/galeri/p10.jpg", "size": 428281}, {"url": "assets/galeri/p11.jpg", "size": 598339}, {"url": "assets/galeri/p12.jpg", "size": 405996}, {"url": "assets/galeri/p13.jpg", "size": 432368}, {"url": "assets/galeri/p14.jpg", "size": 612452}, {"url": "assets/galeri/p15.jpg", "size": 420623}, {"url": "assets/galeri/p16.jpg", "size": 566365}, {"url": "assets/galeri/p17.jpg", "size": 393789}, {"url": "assets/galeri/p18.jpg", "size": 450252}, {"url": "assets/galeri/p19.jpg", "size": 448312}, {"url": "assets/galeri/p20.jpg", "size": 915797}, {"url": "assets/galeri/p21.jpg", "size": 900645}, {"url": "assets/galeri/p22.jpg", "size": 889538}, {"url": "assets/galeri/t01.jpg", "size": 76228}, {"url": "assets/galeri/t02.jpg", "size": 69455}, {"url": "assets/galeri/t03.jpg", "size": 70860}, {"url": "assets/galeri/t04.jpg", "size": 70861}, {"url": "assets/galeri/t05.jpg", "size": 76399}, {"url": "assets/galeri/t06.jpg", "size": 70874}, {"url": "assets/galeri/t07.jpg", "size": 77118}, {"url": "assets/galeri/t08.jpg", "size": 52098}, {"url": "assets/galeri/t09.jpg", "size": 52863}, {"url": "assets/galeri/t10.jpg", "size": 50155}, {"url": "assets/galeri/t11.jpg", "size": 50802}, {"url": "assets/galeri/t12.jpg", "size": 51272}, {"url": "assets/galeri/t13.jpg", "size": 51045}, {"url": "assets/galeri/t14.jpg", "size": 61994}, {"url": "assets/galeri/t15.jpg", "size": 47565}, {"url": "assets/galeri/t16.jpg", "size": 58080}, {"url": "assets/galeri/t17.jpg", "size": 43199}, {"url": "assets/galeri/t18.jpg", "size": 50017}, {"url": "assets/galeri/t19.jpg", "size": 42933}, {"url": "assets/galeri/t20.jpg", "size": 42176}, {"url": "assets/galeri/t21.jpg", "size": 41922}, {"url": "assets/galeri/t22.jpg", "size": 47566}, {"url": "assets/img/acc-logo-white.svg", "size": 47750}, {"url": "assets/img/acc-logo.svg", "size": 47748}, {"url": "assets/img/acc-mark-white.svg", "size": 47750}, {"url": "assets/img/hero-clarivent.jpg", "size": 75824}, {"url": "assets/img/hero-davlumbaz.jpg", "size": 588903}, {"url": "assets/img/home-clarivent.jpg", "size": 92694}, {"url": "assets/img/home-davlumbaz.jpg", "size": 420810}, {"url": "assets/img/poster-clarivent.jpg", "size": 89107}, {"url": "assets/video/clarivent-film.mp4", "size": 52705542}];
+var SECTIONS = {
+  clarivent: {
+    kicker: 'Endüstriyel hava filtrasyonu',
+    title: 'CLARIVENT',
+    desc: 'Gelişmiş çok aşamalı filtrasyon sistemi. Elektrostatik filtre, aktif karbon ve tam otomatik yerinde yıkama ile yağ buharı, duman ve ince tozu kaynağında yakalar.',
+    bg: 'assets/img/hero-clarivent.jpg',
+    deck: { name: 'CLARIVENT Kataloğu', dir: 'assets/clarivent', pages: 13, portrait: true, keepZoom: true },
+    video: { name: 'CLARIVENT Tanıtım Filmi', src: 'assets/video/clarivent-film.mp4', poster: 'assets/img/poster-clarivent.jpg', meta: '1:02 dk · 3D tanıtım' }
+  },
+  davlumbaz: {
+    kicker: 'Basınçlı döküm (HPDC)',
+    title: 'Döküm Davlumbazı',
+    desc: 'Alüminyum döküm tezgahları için kaynağında emiş, çok aşamalı elektrostatik filtrasyon ve PLC kontrollü akıllı davlumbaz sistemleri.',
+    bg: 'assets/img/hero-davlumbaz.jpg',
+    deck: { name: 'Döküm Davlumbazı Sunumu', dir: 'assets/davlumbaz', pages: 13, portrait: false, keepZoom: true },
+    gallery: { name: 'Döküm Davlumbazı · Foto Galeri', dir: 'assets/galeri', pages: 22, portrait: false, keepZoom: false, back: 'gallery' }
+  }
+};
+
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var views = { home: $('home'), section: $('section'), gallery: $('gallery'), viewer: $('viewer'), player: $('player') };
+  var current = 'home', sectionKey = null;
+
+  function show(name) {
+    Object.keys(views).forEach(function (k) { views[k].classList.toggle('active', k === name); });
+    current = name;
+  }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  /* ---------- home / section ---------- */
+  document.querySelectorAll('[data-open]').forEach(function (b) {
+    b.addEventListener('click', function () { openSection(b.getAttribute('data-open')); });
+  });
+  document.querySelectorAll('[data-home]').forEach(function (b) { b.addEventListener('click', function () { show('home'); }); });
+
+  function openSection(key) {
+    var s = SECTIONS[key]; sectionKey = key;
+    $('secBg').style.backgroundImage = 'url(' + s.bg + ')';
+    $('secKicker').textContent = s.kicker;
+    $('secTitle').textContent = s.title;
+    $('secDesc').textContent = s.desc;
+    var html = '<button class="opt" data-act="deck"><span class="oi"><svg class="ico"><use href="#i-deck"/></svg></span>' +
+      '<span class="arr"><svg class="ico"><use href="#i-arrow"/></svg></span><b>Sunum</b><span>' + s.deck.pages + ' sayfa</span></button>';
+    if (s.video) {
+      html += '<button class="opt video" data-act="video"><span class="oi"><svg class="ico"><use href="#i-play"/></svg></span>' +
+        '<span class="arr"><svg class="ico"><use href="#i-arrow"/></svg></span><b>Tanıtım Filmi</b><span>' + s.video.meta + '</span></button>';
+    }
+    if (s.gallery) {
+      html += '<button class="opt gallery" data-act="gallery"><span class="oi"><svg class="ico"><use href="#i-image"/></svg></span>' +
+        '<span class="arr"><svg class="ico"><use href="#i-arrow"/></svg></span><b>Foto Galeri</b><span>' + s.gallery.pages + ' fotoğraf</span></button>';
+    }
+    $('secOpts').innerHTML = html;
+    $('secOpts').querySelectorAll('[data-act]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var act = b.getAttribute('data-act'), s = SECTIONS[sectionKey];
+        if (act === 'deck') openDeck(s.deck, 0);
+        else if (act === 'gallery') openGallery(s.gallery);
+        else openVideo(s.video);
+      });
+    });
+    show('section');
+  }
+
+  /* ---------- gallery ---------- */
+  var gallery = null;
+  function openGallery(gl) {
+    var grid = $('ggrid');
+    if (gallery !== gl) {
+      gallery = gl; grid.innerHTML = ''; $('gscroll').scrollTop = 0;
+      for (var i = 1; i <= gl.pages; i++) {
+        var b = document.createElement('button');
+        b.setAttribute('aria-label', 'Fotoğraf ' + i);
+        b.innerHTML = '<img src="' + gl.dir + '/t' + pad(i) + '.jpg" alt="" decoding="async">';
+        b.firstChild.addEventListener('load', function () { this.classList.add('ld'); });
+        (function (k) { b.addEventListener('click', function () { openDeck(gl, k); }); })(i - 1);
+        grid.appendChild(b);
+      }
+    }
+    $('gCount').textContent = gl.pages + ' fotoğraf';
+    show('gallery');
+  }
+  $('gBack').addEventListener('click', function () { show('section'); });
+
+  /* ---------- deck viewer ---------- */
+  var track = $('track'), thumbs = $('thumbs'), deck = null, cur = 0, pages = [];
+
+  function openDeck(d, start) {
+    deck = d; cur = start || 0; pages = []; d.pref = null;
+    track.innerHTML = ''; thumbs.innerHTML = '';
+    for (var i = 1; i <= d.pages; i++) {
+      var pg = document.createElement('div'); pg.className = 'pg';
+      var img = document.createElement('img'); img.alt = d.name + ' sayfa ' + i; img.decoding = 'async'; img.draggable = false;
+      img.addEventListener('load', function () { fit(this.parentNode, false); this.classList.add('ld'); });
+      pg.appendChild(img); track.appendChild(pg); pages.push(pg);
+      var tb = document.createElement('button');
+      tb.innerHTML = '<img src="' + d.dir + '/t' + pad(i) + '.jpg" alt=""><span>' + i + '</span>';
+      (function (k) { tb.addEventListener('click', function () { thumbs.classList.remove('open'); $('vGrid').classList.remove('on'); goPage(k, true); setUi(true); }); })(i - 1);
+      thumbs.appendChild(tb);
+    }
+    $('vTitle').textContent = d.name;
+    $('vHint').style.display = '';
+    thumbs.classList.remove('open'); $('vGrid').classList.remove('on');
+    show('viewer');
+    goPage(cur, false);
+    setUi(true);
+    setTimeout(function () { $('vHint').style.display = 'none'; }, 4000);
+  }
+
+  function loadAround() {
+    pages.forEach(function (pg, i) {
+      var img = pg.firstChild, near = Math.abs(i - cur) <= 1;
+      if (near && !img.getAttribute('src')) img.src = deck.dir + '/p' + pad(i + 1) + '.jpg';
+      if (!near && Math.abs(i - cur) > 2 && img.getAttribute('src')) { img.removeAttribute('src'); img.classList.remove('ld'); pg._z = null; }
+    });
+  }
+
+  function place(dx, animate) {
+    track.classList.toggle('anim', !!animate);
+    track.style.transform = 'translate3d(' + (-cur * window.innerWidth + (dx || 0)) + 'px,0,0)';
+  }
+
+  function goPage(i, animate) {
+    if (!deck) return;
+    i = Math.max(0, Math.min(deck.pages - 1, i));
+    var prev = pages[cur];
+    if (prev && i !== cur) setTimeout(function () { if (prev !== pages[cur] && prev._z) fit(prev, false); }, animate ? 400 : 0);
+    cur = i;
+    place(0, animate);
+    loadAround();
+    $('vCount').textContent = (cur + 1) + ' / ' + deck.pages;
+    $('vPrev').disabled = cur === 0;
+    $('vNext').disabled = cur === deck.pages - 1;
+    syncZoomUi();
+    Array.prototype.forEach.call(thumbs.children, function (b, k) { b.classList.toggle('on', k === cur); });
+    var on = thumbs.children[cur]; if (on && on.scrollIntoView) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
+
+  var uiTimer;
+  function setUi(on) {
+    clearTimeout(uiTimer);
+    views.viewer.classList.toggle('ui-off', !on);
+    if (on) uiTimer = setTimeout(function () { if (!thumbs.classList.contains('open')) views.viewer.classList.add('ui-off'); }, 3500);
+  }
+
+  /* zoom: scale 1 = whole page visible; z.def = resting scale that fills the screen */
+  function measure(pg) {
+    var img = pg.firstChild, W = pg.clientWidth, H = pg.clientHeight;
+    if (!img.naturalWidth || !W || !H) return null;
+    var ar = img.naturalWidth / img.naturalHeight, bw = W, bh = W / ar;
+    if (bh > H) { bh = H; bw = H * ar; }
+    var cover = Math.max(W / bw, H / bh), def = (deck.portrait || cover <= 1.04) ? cover : 1;
+    return { W: W, H: H, bw: bw, bh: bh, def: def, max: Math.max(5, def * 3) };
+  }
+  function bound(z, s, x, y) {
+    var w = z.bw * s, h = z.bh * s;
+    return [w <= z.W ? (z.W - w) / 2 : Math.min(0, Math.max(z.W - w, x)),
+            h <= z.H ? (z.H - h) / 2 : Math.min(0, Math.max(z.H - h, y))];
+  }
+  function apply(pg, s, x, y, anim) {
+    var img = pg.firstChild, z = pg._z;
+    pg._s = s; pg._x = x; pg._y = y;
+    img.classList.toggle('za', !!anim);
+    img.style.left = x + 'px'; img.style.top = y + 'px';
+    img.style.width = z.bw * s + 'px'; img.style.height = z.bh * s + 'px';
+    if (pg === pages[cur]) syncZoomUi();
+  }
+  function syncZoomUi() {
+    var pg = pages[cur], z = pg && pg._z, on = !!z && Math.abs(pg._s - z.def) > 0.01;
+    views.viewer.classList.toggle('zoomed', on);
+    $('vZoom').classList.toggle('on', on);
+  }
+  function fit(pg, anim) {
+    var z = pg._z = measure(pg); if (!z) return;
+    var s = deck.keepZoom && deck.pref ? Math.max(1, Math.min(z.max, deck.pref)) : z.def, p;
+    if (Math.abs(s - z.def) < 0.01) p = bound(z, s, (z.W - z.bw * s) / 2, deck.portrait ? 0 : (z.H - z.bh * s) / 2);
+    else p = bound(z, s, 0, 0);
+    apply(pg, s, p[0], p[1], anim);
+  }
+  function remember(pg) {
+    var z = pg._z; if (!z) return;
+    deck.pref = Math.abs(pg._s - z.def) < 0.01 ? null : pg._s;
+    pages.forEach(function (o) { if (o !== pg && o._z) fit(o, false); });
+  }
+  function zoomTo(pg, s, ax, ay, anim) {
+    var z = pg._z; if (!z) return;
+    s = Math.max(1, Math.min(z.max, s));
+    var ux = (ax - pg._x) / pg._s, uy = (ay - pg._y) / pg._s, p = bound(z, s, ax - ux * s, ay - uy * s);
+    apply(pg, s, p[0], p[1], anim);
+  }
+  function toggleZoom(ax, ay) {
+    var pg = pages[cur], z = pg && pg._z; if (!z) return;
+    if (Math.abs(pg._s - z.def) > 0.01) { deck.pref = null; fit(pg, true); remember(pg); return; }
+    if (ax == null) { ax = z.W / 2; ay = z.H / 2; }
+    zoomTo(pg, z.def > 1.3 ? 1 : z.def * 2.5, ax, ay, true);
+    remember(pg);
+  }
+  function settle(pg, m) {
+    var z = pg && pg._z; if (!z) return;
+    var s = Math.max(1, Math.min(z.max, pg._s));
+    if (Math.abs(s - z.def) < 0.03 * z.def) s = z.def;
+    m = m || [z.W / 2, z.H / 2];
+    zoomTo(pg, s, m[0], m[1], true);
+    remember(pg);
+  }
+
+  $('vClose').addEventListener('click', function () { show(deck.back || 'section'); setTimeout(function () { track.innerHTML = ''; pages = []; }, 400); });
+  $('vPrev').addEventListener('click', function () { goPage(cur - 1, true); setUi(true); });
+  $('vNext').addEventListener('click', function () { goPage(cur + 1, true); setUi(true); });
+  $('vZoom').addEventListener('click', function () { toggleZoom(); setUi(true); });
+  $('vGrid').addEventListener('click', function () { var o = thumbs.classList.toggle('open'); $('vGrid').classList.toggle('on', o); setUi(true); if (o) goPage(cur, false); });
+
+  var g = null, lastTap = 0, tapTimer = null, lastTouch = 0;
+  function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) || 1; }
+  function mid(a, b) { return [(a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2]; }
+  function zoomedIn(pg) { var z = pg && pg._z; return !!z && (z.bw * pg._s > z.W + 1 || z.bh * pg._s > z.H + 1); }
+  function atEdge(pg, mx) {
+    var z = pg._z, w = z.bw * pg._s;
+    if (w <= z.W + 1) return true;
+    return mx < 0 ? pg._x <= z.W - w + 1 : pg._x >= -1;
+  }
+  function tap(x, y) {
+    var now = Date.now();
+    if (now - lastTap < 320) { clearTimeout(tapTimer); lastTap = 0; toggleZoom(x, y); setUi(false); return; }
+    lastTap = now;
+    tapTimer = setTimeout(function () {
+      if (thumbs.classList.contains('open')) { thumbs.classList.remove('open'); $('vGrid').classList.remove('on'); setUi(true); }
+      else setUi(views.viewer.classList.contains('ui-off'));
+    }, 320);
+  }
+
+  track.addEventListener('touchstart', function (e) {
+    lastTouch = Date.now();
+    var pg = pages[cur];
+    if (e.touches.length >= 2) {
+      if (g && g.mode === 'swipe') place(0, true);
+      clearTimeout(tapTimer); lastTap = 0;
+      if (!pg || !pg._z) { g = null; return; }
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b);
+      g = { mode: 'pinch', d0: dist(a, b), s0: pg._s, ux: (m[0] - pg._x) / pg._s, uy: (m[1] - pg._y) / pg._s, m: m };
+      setUi(false);
+      return;
+    }
+    var t = e.touches[0];
+    g = { mode: null, sx: t.clientX, sy: t.clientY, x0: pg ? pg._x : 0, y0: pg ? pg._y : 0, dx: 0, moved: false };
+  }, { passive: true });
+
+  track.addEventListener('touchmove', function (e) {
+    if (e.cancelable) e.preventDefault();
+    if (!g) return;
+    var pg = pages[cur], z = pg && pg._z;
+    if (g.mode === 'pinch') {
+      if (e.touches.length < 2 || !z) return;
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b), s = g.s0 * dist(a, b) / g.d0;
+      if (s < 1) s = 1 - (1 - s) * 0.35; else if (s > z.max) s = z.max + (s - z.max) * 0.35;
+      g.m = m;
+      apply(pg, s, m[0] - g.ux * s, m[1] - g.uy * s, false);
+      return;
+    }
+    if (e.touches.length !== 1) return;
+    var t = e.touches[0], mx = t.clientX - g.sx, my = t.clientY - g.sy;
+    if (!g.mode) {
+      if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+      g.moved = true;
+      if (!zoomedIn(pg)) g.mode = Math.abs(mx) > Math.abs(my) ? 'swipe' : 'none';
+      else g.mode = Math.abs(mx) > Math.abs(my) * 1.5 && atEdge(pg, mx) ? 'swipe' : 'pan';
+    }
+    if (g.mode === 'swipe') {
+      var dx = mx;
+      if ((cur === 0 && dx > 0) || (cur === deck.pages - 1 && dx < 0)) dx = dx / 3;
+      g.dx = dx; place(dx, false);
+    } else if (g.mode === 'pan' && z) {
+      var x = g.x0 + mx, y = g.y0 + my, p = bound(z, pg._s, x, y);
+      apply(pg, pg._s, p[0] + (x - p[0]) * 0.3, p[1] + (y - p[1]) * 0.3, false);
+    }
+  }, { passive: false });
+
+  function touchEnd(e) {
+    lastTouch = Date.now();
+    if (!g) return;
+    var pg = pages[cur];
+    if (g.mode === 'pinch') {
+      if (e.touches.length === 1) {
+        var t = e.touches[0];
+        g = { mode: 'pan', sx: t.clientX, sy: t.clientY, x0: pg._x, y0: pg._y, moved: true };
+      } else if (!e.touches.length) { settle(pg, g.m); g = null; }
+      return;
+    }
+    if (e.touches.length) return;
+    if (g.mode === 'swipe') {
+      var th = Math.min(120, window.innerWidth * 0.12);
+      if (g.dx < -th) goPage(cur + 1, true); else if (g.dx > th) goPage(cur - 1, true); else place(0, true);
+    } else if (g.mode === 'pan') settle(pg);
+    else if (!g.moved && e.type === 'touchend') tap(g.sx, g.sy);
+    g = null;
+  }
+  track.addEventListener('touchend', touchEnd);
+  track.addEventListener('touchcancel', touchEnd);
+  track.addEventListener('click', function (e) { if (Date.now() - lastTouch > 800) tap(e.clientX, e.clientY); });
+  window.addEventListener('resize', function () {
+    if (current !== 'viewer') return;
+    place(0, false);
+    pages.forEach(function (pg) { if (pg._z) fit(pg, false); });
+    syncZoomUi();
+  });
+
+  /* ---------- video ---------- */
+  var video = $('video'), blobUrl = null, dimTimer;
+  function openVideo(v) {
+    views.player.classList.remove('failed', 'playing');
+    $('pTitle').textContent = v.name;
+    video.poster = v.poster;
+    video.src = v.src;
+    video.dataset.src = v.src;
+    show('player');
+    var p = video.play(); if (p && p.catch) p.catch(function () {});
+  }
+  video.addEventListener('error', function () {
+    if (blobUrl || !video.dataset.src || !window.caches) { views.player.classList.add('failed'); return; }
+    caches.open(CACHE).then(function (c) { return c.match(video.dataset.src); }).then(function (r) {
+      if (!r) throw new Error('missing');
+      return r.blob();
+    }).then(function (b) {
+      blobUrl = URL.createObjectURL(b); video.src = blobUrl; video.play().catch(function () {});
+    }).catch(function () { views.player.classList.add('failed'); });
+  });
+  video.addEventListener('play', function () { views.player.classList.add('playing'); poke(); });
+  video.addEventListener('pause', function () { $('pBar').classList.remove('dim'); });
+  video.addEventListener('ended', function () { $('pBar').classList.remove('dim'); });
+  function poke() { $('pBar').classList.remove('dim'); clearTimeout(dimTimer); dimTimer = setTimeout(function () { if (!video.paused) $('pBar').classList.add('dim'); }, 2500); }
+  views.player.addEventListener('touchstart', poke, { passive: true });
+  $('pClose').addEventListener('click', function () {
+    video.pause(); video.removeAttribute('src'); video.load();
+    if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
+    show('section');
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (current === 'viewer') {
+      if (e.key === 'ArrowRight' || e.key === ' ') goPage(cur + 1, true);
+      else if (e.key === 'ArrowLeft') goPage(cur - 1, true);
+      else if (e.key === 'Escape') $('vClose').click();
+    } else if (e.key === 'Escape') {
+      if (current === 'player') $('pClose').click(); else if (current === 'gallery') show('section'); else if (current === 'section') show('home');
+    }
+  });
+  document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+
+  /* ---------- offline download ---------- */
+  var statusEl = $('status'), statusText = $('statusText'), statusBar = $('statusBar');
+  function setStatus(kind, text, pct) {
+    statusEl.className = 'status' + (kind ? ' ' + kind : '');
+    statusText.textContent = text;
+    if (pct != null) statusBar.style.width = pct + '%';
+  }
+
+  function mb(n) { return (n / 1048576).toFixed(0); }
+
+  function downloadAll() {
+    if (!window.caches || !window.fetch) { setStatus('err', 'Çevrimdışı desteklenmiyor'); return; }
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
+    var cache, missing = [], total = 0, done = 0;
+    caches.open(CACHE).then(function (c) {
+      cache = c;
+      return Promise.all(ASSETS.map(function (a) {
+        return c.match(a.url).then(function (r) {
+          if (r) return false;
+          return caches.match(a.url).then(function (old) {
+            if (old && old.headers.get('Content-Length') === String(a.size)) return c.put(a.url, old).then(function () { return false; });
+            return true;
+          });
+        });
+      }));
+    }).then(function (need) {
+      ASSETS.forEach(function (a, i) { if (need[i]) { missing.push(a); total += a.size; } });
+      if (!missing.length) { setStatus('ok', 'Çevrimdışı hazır'); return pruneOld(); }
+      setStatus('', 'İndiriliyor %0', 0);
+      var chain = Promise.resolve();
+      missing.forEach(function (a) {
+        chain = chain.then(function () {
+          return fetch(a.url, { cache: 'reload' }).then(function (res) {
+            if (!res.ok) throw new Error(a.url);
+            var type = res.headers.get('Content-Type') || '';
+            if (!res.body || !res.body.getReader) {
+              return res.blob().then(function (b) { done += a.size; return b; });
+            }
+            var reader = res.body.getReader(), parts = [];
+            function pump() {
+              return reader.read().then(function (r) {
+                if (r.done) return new Blob(parts, { type: type });
+                parts.push(r.value); done += r.value.length;
+                var pct = Math.min(99, Math.round(done / total * 100));
+                setStatus('', 'İndiriliyor %' + pct + ' (' + mb(done) + '/' + mb(total) + ' MB)', pct);
+                return pump();
+              });
+            }
+            return pump();
+          }).then(function (blob) {
+            return cache.put(a.url, new Response(blob, { headers: { 'Content-Type': blob.type || 'application/octet-stream', 'Content-Length': String(blob.size) } }));
+          });
+        });
+      });
+      return chain.then(function () { setStatus('ok', 'Çevrimdışı hazır', 100); return pruneOld(); });
+    }).catch(function () {
+      setStatus('err', navigator.onLine ? 'İndirme yarım kaldı · tekrar deneniyor' : 'İnternet yok · indirme tamamlanmadı');
+      setTimeout(downloadAll, 8000);
+    });
+  }
+
+  function pruneOld() {
+    return caches.keys().then(function (keys) {
+      return Promise.all(keys.filter(function (k) { return k.indexOf('acc-fuar-assets-') === 0 && k !== CACHE; })
+        .map(function (k) { return caches.delete(k); }));
+    });
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
+  window.addEventListener('load', function () { setTimeout(downloadAll, 300); });
+})();
+</script>
+</body>
+</html>
